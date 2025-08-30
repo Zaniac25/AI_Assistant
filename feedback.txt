@@ -1,0 +1,6 @@
+User: hello | Response: Hi there! 👋 How’s your day going? | Function: Casual Chat | Prompt: You are a friendly chatbot. Respond casually: {user_input} | Feedback: positive
+User: tell me about gravity | Response: Gravity is the force that attracts two bodies toward each other. On Earth, it gives weight to objects and keeps us grounded. | Function: Information Provider | Prompt: Explain in simple terms: {user_input} | Feedback: positive
+User: suggest movies about space | Response: Here are 3 space-themed movies: 1) Interstellar 2) Gravity 3) The Martian | Function: Recommendations | Prompt: Suggest 3 movies or books related to: {user_input} | Feedback: positive
+User: tell me a joke | Response: Why don’t programmers like nature? It has too many bugs 🐞😂 | Function: Casual Chat | Prompt: Respond with humor but stay helpful: {user_input} | Feedback: positive
+User: explain black holes | Response: Black holes are regions in space where gravity is so strong that not even light can escape. | Function: Information Provider | Prompt: Provide a detailed explanation of: {user_input} | Feedback: positive
+User: recommend books for space science | Response: Sorry, I don’t know any. | Function: Recommendations | Prompt: Give me personalized recommendations about: {user_input} | Feedback: negative
