@@ -1,6 +1,4 @@
-# streamlit_app.py
 import os
-import json
 import random
 import streamlit as st
 import google.generativeai as genai
@@ -13,23 +11,9 @@ from prompts import casual_chat_prompts, info_prompts, recommendation_prompts
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-HISTORY_FILE = "chat_history.json"
 FEEDBACK_FILE = "feedback.txt"
 
 # ---------------- Helpers ----------------
-def load_history():
-    if os.path.exists(HISTORY_FILE):
-        try:
-            with open(HISTORY_FILE, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except:
-            return []
-    return []
-
-def save_history(history):
-    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
-        json.dump(history, f, ensure_ascii=False, indent=2)
-
 def log_feedback(user_input, bot_reply, rating, function, prompt_used):
     with open(FEEDBACK_FILE, "a", encoding="utf-8") as f:
         f.write(f"User: {user_input} | Response: {bot_reply} | Function: {function} | Prompt: {prompt_used} | Feedback: {rating}\n")
@@ -42,13 +26,12 @@ st.title("🤖 M Tarini's AI Assistant")
 with st.sidebar:
     st.header("⚙️ Settings")
     if st.button("🗑️ Clear Chat"):
-        save_history([])
         st.session_state.messages = []
         st.rerun()
 
-# Load history
+# Initialize per-user session history
 if "messages" not in st.session_state:
-    st.session_state.messages = load_history()
+    st.session_state.messages = []
 
 # Function selector
 function_choice = st.radio(
@@ -94,9 +77,8 @@ if user_input := st.chat_input("Type your message here..."):
             # Show reply
             placeholder.markdown(f"🤖 {bot_reply}")
 
-            # Save chat
+            # Save chat in session only
             st.session_state.messages.append({"role": "assistant", "content": bot_reply})
-            save_history(st.session_state.messages)
 
             # Feedback buttons
             col1, col2 = st.columns(2)
@@ -109,3 +91,4 @@ if user_input := st.chat_input("Type your message here..."):
 
         except Exception as e:
             placeholder.markdown(f"⚠️ Error: {e}")
+
