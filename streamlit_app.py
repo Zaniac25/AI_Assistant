@@ -59,19 +59,24 @@ if user_input := st.chat_input("Type your message here..."):
             # Pick prompt template based on function
             if function_choice == "Casual Chat":
                 prompt_template = random.choice(casual_chat_prompts)
-                prompt = prompt_template.format(user_input=user_input)
-
             elif function_choice == "Information Provider":
                 prompt_template = random.choice(info_prompts)
-                prompt = prompt_template.format(user_input=user_input)
-
             else:  # Recommendations
                 prompt_template = random.choice(recommendation_prompts)
-                prompt = prompt_template.format(user_input=user_input)
 
-            # Generate with Gemini
+            # Build conversation history for memory
+            conversation = []
+            for msg in st.session_state.messages:
+                role = "user" if msg["role"] == "user" else "model"
+                conversation.append({"role": role, "parts": [msg["content"]]})
+
+            # Add the latest user input formatted with template
+            prompt = prompt_template.format(user_input=user_input)
+            conversation.append({"role": "user", "parts": [prompt]})
+
+            # Generate with Gemini (with context)
             model = genai.GenerativeModel("gemini-1.5-flash")
-            response = model.generate_content([prompt])
+            response = model.generate_content(conversation)
             bot_reply = response.text.strip()
 
             # Show reply
@@ -91,4 +96,3 @@ if user_input := st.chat_input("Type your message here..."):
 
         except Exception as e:
             placeholder.markdown(f"⚠️ Error: {e}")
-
